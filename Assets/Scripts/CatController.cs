@@ -38,6 +38,7 @@ public class CatController : MonoBehaviour
 
     private bool buttJump;
     private bool headJump;
+    private List<float> xOffsets;
 
     List<Vector2> splinePoints = new List<Vector2>();
 
@@ -81,6 +82,11 @@ public class CatController : MonoBehaviour
         if (stomachColliders == null)
         {
             stomachColliders = new List<PolygonCollider2D>();
+        }
+
+        if (xOffsets == null)
+        {
+            xOffsets = new List<float>();
         }
 
         buttMove = 0;
@@ -159,18 +165,6 @@ public class CatController : MonoBehaviour
             }
         }
         butt.gameObject.GetComponent<SpringJoint2D>().distance = bellyWidth;
-
-        // if (stomachContents.Count != stomachColliders.Count)
-        // {
-        //     foreach (GameObject food in stomachContents)
-        //     {
-        //         PolygonCollider2D foodCollider = food.GetComponent<PolygonCollider2D>();
-        //         PolygonCollider2D stomachCollider = gameObject.AddComponent<PolygonCollider2D>();
-        //         stomachCollider.points = foodCollider.points;
-        //         // stomachCollider.offset = 
-        //         stomachColliders.Add(stomachCollider);
-        //     }
-        // }
     }
 
     // Update is called once per frame
@@ -205,6 +199,8 @@ public class CatController : MonoBehaviour
         Vector2 buttOrigin = butt.position + butt2head * 0.5f;
         Vector2 headOrigin = head.position - butt2head * 0.5f;
 
+        Spline collisionSpline = new Spline();
+        List<Vector2> collisionPoints = new List<Vector2>();
 
         // Set position of butt points
         spline.SetPosition(0, buttOrigin + flipFactor * butt2head.Perpendicular2() * splinePoints[0].y + butt2head * splinePoints[0].x);
@@ -213,27 +209,21 @@ public class CatController : MonoBehaviour
         float minBellyWidth = Mathf.Min(Mathf.Abs(splinePoints[0].y - splinePoints[1].y), Mathf.Abs(splinePoints[2].y - splinePoints[3].y));
 
         int pointIndex = 2;
+        int collisionSplineIndex = 0;
         float startPoint = -totalFoodWidth / 2f;
+
         // Procedurally generate back shape
         foreach (List<Vector2> foodPoints in bellyPoints)
         {
-            // normalize x and y axis so that average is 0
-            float averageX = foodPoints.Average(p => p.x);
-            float averageY = foodPoints.Average(p => p.y);
-            for (int i = 0; i < foodPoints.Count; i++)
-            {
-                foodPoints[i] = new Vector2(foodPoints[i].x - averageX, foodPoints[i].y - averageY);
-            }
-
             float foodWidth = foodPoints.Max(p => p.x) - foodPoints.Min(p => p.x);
             float min = foodPoints.Min(p => p.x);
 
             for (int i = 0; i < foodPoints.Count; i++)
             {
+                Vector2 p = ((buttOrigin + headOrigin) / 2f + (startPoint - min) * butt2head) + flipFactor * butt2head.Perpendicular2() * foodPoints[i].y + butt2head * foodPoints[i].x;
+
                 if (foodPoints[i].y > minBellyWidth / 2f)
                 {
-                    Vector2 p = ((buttOrigin + headOrigin) / 2f + (startPoint - min) * butt2head) + flipFactor * butt2head.Perpendicular2() * foodPoints[i].y + butt2head * foodPoints[i].x;
-
                     if (spline.GetPointCount() - 2 == pointIndex)
                     {
                         spline.InsertPointAt(pointIndex, p);
@@ -244,11 +234,17 @@ public class CatController : MonoBehaviour
                     }
                     pointIndex++;
                 }
+                if (foodPoints[i].y > 0)
+                {
+                    collisionPoints.Add(p);
+                }
             }
             startPoint += foodWidth;
         }
 
         float endPoint = totalFoodWidth / 2f;
+
+        int headPointIndex = pointIndex;
         // Set position of head points
         spline.SetPosition(pointIndex++, headOrigin + flipFactor * butt2head.Perpendicular2() * splinePoints[2].y + butt2head * splinePoints[2].x);
         spline.SetPosition(pointIndex++, headOrigin + flipFactor * butt2head.Perpendicular2() * splinePoints[3].y + butt2head * splinePoints[3].x);
@@ -259,21 +255,21 @@ public class CatController : MonoBehaviour
             foodPoints.Reverse();
             // normalize x and y axis so that average is 0
             float averageX = foodPoints.Average(p => p.x);
+            print(averageX);
             float averageY = foodPoints.Average(p => p.y);
             for (int i = 0; i < foodPoints.Count; i++)
             {
                 foodPoints[i] = new Vector2(foodPoints[i].x - averageX, foodPoints[i].y - averageY);
             }
-            
+
             float foodWidth = foodPoints.Max(p => p.x) - foodPoints.Min(p => p.x);
             float max = foodPoints.Max(p => p.x);
 
             for (int i = 0; i < foodPoints.Count; i++)
             {
+                Vector2 p = ((buttOrigin + headOrigin) / 2f + (endPoint - max) * butt2head) + flipFactor * butt2head.Perpendicular2() * foodPoints[i].y + butt2head * foodPoints[i].x;
                 if (foodPoints[i].y < -minBellyWidth / 2f)
                 {
-                    Vector2 p = ((buttOrigin + headOrigin) / 2f + (endPoint - max) * butt2head) + flipFactor * butt2head.Perpendicular2() * foodPoints[i].y + butt2head * foodPoints[i].x;
-
                     if (spline.GetPointCount() == pointIndex)
                     {
                         spline.InsertPointAt(pointIndex, p);
@@ -284,8 +280,28 @@ public class CatController : MonoBehaviour
                     }
                     pointIndex++;
                 }
+                if (foodPoints[i].y <= 0)
+                {
+                    collisionPoints.Add(p);
+                }
             }
             endPoint -= foodWidth;
+        }
+
+        if (collisionPoints.Count > 0) {
+            PolygonCollider2D collider = butt.gameObject.GetComponent<PolygonCollider2D>();
+            List<Vector2> points = new List<Vector2>();
+            for (int i = 0; i < collisionPoints.Count; i++)
+            {
+                points.Add(collisionPoints[i]);
+            }
+            Vector2 average = new Vector2(points.Average(p => p.x), points.Average(p => p.y));
+            for (int i = 0; i < points.Count; i++)
+            {
+                points[i] = new Vector2(points[i].x - average.x, points[i].y - average.y);
+            }
+            collider.points = points.ToArray();
+            collider.offset = Vector2.right * (head.position - butt.position).magnitude / 2f;
         }
 
 
