@@ -119,6 +119,8 @@ public class CatController : MonoBehaviour
     // The time between each FixedUpdate is constant
     void FixedUpdate()
     {
+        
+
         // If we have some input
         if (Mathf.Abs(buttMove) > 0.001)
         {
@@ -173,10 +175,17 @@ public class CatController : MonoBehaviour
             bellyWidth = 0.55f;
             foreach (GameObject food in stomachContents)
             {
-                bellyWidth += food.GetComponent<PolygonCollider2D>().bounds.size.x;
+                List<Vector2> points = food.GetComponent<PolygonCollider2D>().points.ToList();
+                float maxX = points.Max(p => p.x);
+                float minX = points.Min(p => p.x);
+                bellyWidth += Mathf.Abs(maxX - minX);
             }
         }
+        butt.gameObject.GetComponent<PolygonCollider2D>().isTrigger = Vector3.SqrMagnitude(head.position - butt.position) <= (bellyWidth-0.5f)*(bellyWidth-0.5f);
+
         butt.gameObject.GetComponent<SpringJoint2D>().distance = bellyWidth;
+
+        
     }
 
     // Update is called once per frame
@@ -230,6 +239,12 @@ public class CatController : MonoBehaviour
         // Procedurally generate back shape
         foreach (List<Vector2> foodPoints in bellyPoints)
         {
+            float averageX = foodPoints.Average(p => p.x);
+            float averageY = foodPoints.Average(p => p.y);
+            for (int i = 0; i < foodPoints.Count; i++)
+            {
+                foodPoints[i] = new Vector2(foodPoints[i].x - averageX, foodPoints[i].y - averageY);
+            }
             float foodWidth = foodPoints.Max(p => p.x) - foodPoints.Min(p => p.x);
             float min = foodPoints.Min(p => p.x);
 
@@ -270,7 +285,6 @@ public class CatController : MonoBehaviour
             foodPoints.Reverse();
             // normalize x and y axis so that average is 0
             float averageX = foodPoints.Average(p => p.x);
-            print(averageX);
             float averageY = foodPoints.Average(p => p.y);
             for (int i = 0; i < foodPoints.Count; i++)
             {
