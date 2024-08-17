@@ -11,9 +11,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - head
+  - butt
+  - body
   - 
   - 
   - 
@@ -40,4 +40,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: head
+    uniqueID: 211829919
+    locked: 0
+  - name: butt
+    uniqueID: 1092556859
+    locked: 0
+  - name: body
+    uniqueID: 1430281125
     locked: 0

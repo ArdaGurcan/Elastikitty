@@ -13,6 +13,9 @@ public class CatController : MonoBehaviour
     private SpriteShapeController sprite;
     private Spline spline;
 
+    public Animator headAnimator;
+    public Animator buttAnimator;
+
     [SerializeField]
     float speed = 5f;
     [SerializeField]
@@ -86,13 +89,18 @@ public class CatController : MonoBehaviour
         {
             headJump = false;
             head.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
         }
 
         if (buttJump)
         {
             buttJump = false;
             butt.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
         }
+
+        headAnimator.SetFloat("Speed", Mathf.Abs(headMove) + Mathf.Abs(buttMove));
+        buttAnimator.SetFloat("Speed", Mathf.Abs(buttMove) + Mathf.Abs(headMove));
     }
 
     void Update()
