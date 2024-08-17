@@ -46,6 +46,8 @@ public class CatController : MonoBehaviour
     public void OnButtMove(InputAction.CallbackContext context)
     {
         // Gets the value of the input as float since it can be decimal in the case of a joystick
+        // This value is either -1 or 1 depending on direction pressed on keyboard
+        // Reads into input variable to immediately receive input and then uses it when drawing the next frame
         buttMove = context.ReadValue<float>();
     }
 
@@ -74,6 +76,7 @@ public class CatController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Initialize the lists
         if (stomachContents == null)
         {
             stomachContents = new List<GameObject>();
@@ -102,25 +105,30 @@ public class CatController : MonoBehaviour
         sprite = GameObject.Find("Body").GetComponent<SpriteShapeController>();
 
         // Save spline points for dynamically generating belly later
+        // This gets the 4 corners from the sprite shape controller in the editor so we can use them in the script
+        // without hardcoding them
         spline = sprite.spline;
         for (int i = 0; i < 4; i++)
         {
             splinePoints.Add(spline.GetPosition(i));
-            Debug.Log(spline.GetPosition(i));
         }
     }
 
+    // FixedUpdate is called once per physics frame
+    // This is where we should do all physics related calculations
+    // The time between each FixedUpdate is constant
     void FixedUpdate()
     {
         // If we have some input
         if (Mathf.Abs(buttMove) > 0.001)
         {
-            // Move the butt with speed and apply gravity
+            // Move the butt with speed
             butt.velocity = new Vector2(buttMove * speed, butt.velocity.y);
         }
         else
         {
             // Otherwise apply just gravity
+            // Probalby redundant
             butt.velocity = new Vector2(butt.velocity.x, butt.velocity.y);
         }
 
@@ -148,45 +156,53 @@ public class CatController : MonoBehaviour
             butt.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
-        headAnimator.SetFloat("Speed", Mathf.Abs(headMove)/* + Mathf.Abs(buttMove) */);
-        buttAnimator.SetFloat("Speed", Mathf.Abs(buttMove)/* + Mathf.Abs(headMove) */);
+        headAnimator.SetFloat("Speed", Mathf.Abs(headMove));
+        buttAnimator.SetFloat("Speed", Mathf.Abs(buttMove));
 
-        float bellyWidth = 0;
+        // determine the horizontal size of the belly to set the distance of the spring joint
+        // butt ---- belly ---- head
+        //     [   bellyWidth  ]
+        float bellyWidth;
+        // if nothing in stomach, belly width just enough to separate butt and head + some padding
         if (stomachContents.Count == 0)
         {
             bellyWidth = 1.05f;
         }
-        else
+        else // if there is food in stomach, belly width is the sum of the food widths + some padding + butt and head width ( from their centers )
         {
             bellyWidth = 0.55f;
             foreach (GameObject food in stomachContents)
             {
-                bellyWidth += food.GetComponent<SpriteRenderer>().bounds.size.x;
+                bellyWidth += food.GetComponent<PolygonCollider2D>().bounds.size.x;
             }
         }
         butt.gameObject.GetComponent<SpringJoint2D>().distance = bellyWidth;
     }
 
     // Update is called once per frame
+    // This is where we should do mostly rendering related calculations
+    // The time between each Update is not constant, it is Time.deltaTime
     void Update()
     {
         // Get the direction of the cat
         Vector2 butt2head = (head.position - butt.position).normalized;
 
-        // Update the spline
+        // Get the direction of the cat
         // Flip is used to calculate the belly points correctly when the cat is flipped
         int flipFactor = butt.position.x < head.position.x ? 1 : -1;
 
+        // Total width of the food in the stomach used for calculating the belly width which is used for positing food in belly
         float totalFoodWidth = 0;
-        // Procedurally generate body
 
         List<List<Vector2>> bellyPoints = new List<List<Vector2>>();
+        // Get the points of the food in the stomach
+        // sort them, extract width, and add them to the belly points
         foreach (GameObject food in stomachContents)
         {
             // Get the bounding points of the food from polygon collider
             bellyPoints.Add(new List<Vector2>());
             List<Vector2> foodPoints = food.GetComponent<PolygonCollider2D>().points.ToList();
-            // Sort points by x
+            // Sort points by x for easy drawing
             foodPoints.Sort((a, b) => a.x.CompareTo(b.x));
             totalFoodWidth += Mathf.Abs(foodPoints.Last().x - foodPoints.First().x);
             // Add the points to the belly points
@@ -209,7 +225,6 @@ public class CatController : MonoBehaviour
         float minBellyWidth = Mathf.Min(Mathf.Abs(splinePoints[0].y - splinePoints[1].y), Mathf.Abs(splinePoints[2].y - splinePoints[3].y));
 
         int pointIndex = 2;
-        int collisionSplineIndex = 0;
         float startPoint = -totalFoodWidth / 2f;
 
         // Procedurally generate back shape
@@ -288,7 +303,8 @@ public class CatController : MonoBehaviour
             endPoint -= foodWidth;
         }
 
-        if (collisionPoints.Count > 0) {
+        if (collisionPoints.Count > 0)
+        {
             PolygonCollider2D collider = butt.gameObject.GetComponent<PolygonCollider2D>();
             List<Vector2> points = new List<Vector2>();
             for (int i = 0; i < collisionPoints.Count; i++)
