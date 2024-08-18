@@ -194,7 +194,35 @@ public class CatController : MonoBehaviour
         butt.gameObject.GetComponent<PolygonCollider2D>().isTrigger = Vector3.SqrMagnitude(head.position - butt.position) <= (bellyWidth - 0.5f) * (bellyWidth - 0.5f);
 
         butt.gameObject.GetComponent<SpringJoint2D>().distance = bellyWidth;
+        for (int i = 0; i < stomachContents.Count; i++)
+        {
+            if (stomachContents[i].name == "anvil")
+            {
+                head.mass = 20;
+                butt.mass = 20;
+                jumpForce = 50;
+            }
+            else if (stomachContents[i].name == "balloon")
+            {
 
+                head.velocity = new Vector2(head.velocity.x, 1);
+                butt.velocity = new Vector2(head.velocity.x, 1);
+                head.drag = 0.6f;
+                butt.drag = 0.6f;
+            }
+            else if (stomachContents[i].name == "ball")
+            {
+                if (head.GetComponent<CircleCollider2D>().bounciness < 1f)
+                {
+                    PhysicsMaterial2D bouncy = new PhysicsMaterial2D();
+                    bouncy.bounciness = 2f;
+                    bouncy.friction = head.GetComponent<CircleCollider2D>().sharedMaterial.friction;
+                    head.GetComponent<CircleCollider2D>().sharedMaterial = bouncy;
+                    butt.GetComponent<CircleCollider2D>().sharedMaterial = bouncy;
+                    butt.GetComponent<PolygonCollider2D>().sharedMaterial = bouncy;
+                }
+            }
+        }
 
     }
 
@@ -203,27 +231,7 @@ public class CatController : MonoBehaviour
     // The time between each Update is not constant, it is Time.deltaTime
     void Update()
     {
-        for (int i = 0; i < stomachContents.Count; i++)
-        {
-            if (stomachContents[i].name == "anvil")
-            {
-                head.mass *= 10;
-                butt.mass *= 10;
-            }
-            else if (stomachContents[i].name == "balloon")
-            {
-                head.velocity = new Vector2(head.velocity.x, -1);
-                butt.velocity = new Vector2(butt.velocity.x, -1);
-            }
-            else if (stomachContents[i].name == "ball")
-            {
-                PhysicsMaterial2D bouncy = new PhysicsMaterial2D();
-                bouncy.bounciness = 1.2f;
-                bouncy.friction = head.GetComponent<CircleCollider2D>().sharedMaterial.friction;
-                head.GetComponent<CircleCollider2D>().sharedMaterial = bouncy;
-                butt.GetComponent<CircleCollider2D>().sharedMaterial = bouncy;
-            }
-        }
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);

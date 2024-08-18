@@ -265,8 +265,8 @@ GameObject:
   - component: {fileID: 67898241}
   - component: {fileID: 67898240}
   - component: {fileID: 67898239}
-  m_Layer: 0
-  m_Name: sandwich
+  m_Layer: 11
+  m_Name: balloon
   m_TagString: Edible
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1433,6 +1433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6636efabb7684958bf1973dfbf6cb20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  head: {fileID: 0}
   speed: 5
   jumpForce: 10
   mass: 1
@@ -1551,6 +1552,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 5cfbb63a-0e02-4014-be34-cf796e8a9100
     m_ActionName: New action map/New action
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0bd2f2fb-f3af-41a5-96a7-92c6837ebbb5
+    m_ActionName: Cat/Eat[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Cat
@@ -1975,6 +1980,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 5cfbb63a-0e02-4014-be34-cf796e8a9100
     m_ActionName: Head/Eat[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0bd2f2fb-f3af-41a5-96a7-92c6837ebbb5
+    m_ActionName: Cat/Eat[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Head
