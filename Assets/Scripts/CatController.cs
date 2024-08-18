@@ -12,6 +12,8 @@ using UnityEngine.U2D;
 public class CatController : MonoBehaviour
 {
 
+    [SerializeField]
+    GameObject rollingCat;
     public Rigidbody2D head;
     Rigidbody2D butt;
 
@@ -40,7 +42,6 @@ public class CatController : MonoBehaviour
 
     private bool buttJump;
     private bool headJump;
-    private List<float> xOffsets;
 
     List<Vector2> splinePoints = new List<Vector2>();
 
@@ -97,10 +98,6 @@ public class CatController : MonoBehaviour
             stomachColliders = new List<PolygonCollider2D>();
         }
 
-        if (xOffsets == null)
-        {
-            xOffsets = new List<float>();
-        }
 
         buttMove = 0;
         headMove = 0;
@@ -179,10 +176,12 @@ public class CatController : MonoBehaviour
         if (stomachContents.Count == 0)
         {
             bellyWidth = 1.05f;
+            // transform.GetChild(1).GetComponents<SpringJoint2D>()[0].distance = bellyWidth / 2f;
+            // transform.GetChild(1).GetComponents<SpringJoint2D>()[1].distance = bellyWidth / 2f;
         }
         else // if there is food in stomach, belly width is the sum of the food widths + some padding + butt and head width ( from their centers )
         {
-            bellyWidth = 0.55f;
+            bellyWidth = 1.05f;
             foreach (GameObject food in stomachContents)
             {
                 List<Vector2> points = food.GetComponent<PolygonCollider2D>().points.ToList();
@@ -190,12 +189,25 @@ public class CatController : MonoBehaviour
                 float minX = points.Min(p => p.x);
                 bellyWidth += Mathf.Abs(maxX - minX);
             }
+            // find middle - leftmost point of stomach
+            Vector2 middle = Vector2.zero;
+            Vector2 leftmost = stomachContents[0].GetComponent<PolygonCollider2D>().points.ToList().OrderBy(p => p.x).First();
+            // transform.GetChild(1).GetComponents<SpringJoint2D>()[0].distance = Vector3.Magnitude(middle - leftmost) + 1.05f/2f + 0.05f;
+            // find rightmost - middle point of stomach
+            Vector2 rightmost = stomachContents[0].GetComponent<PolygonCollider2D>().points.ToList().OrderByDescending(p => p.x).First();
+            // transform.GetChild(1).GetComponents<SpringJoint2D>()[1].distance = Vector3.Magnitude(middle - rightmost) + 1.05f/2f + 0.05f;;
         }
-        butt.gameObject.GetComponent<PolygonCollider2D>().isTrigger = Vector3.SqrMagnitude(head.position - butt.position) <= (bellyWidth - 0.5f) * (bellyWidth - 0.5f);
+        bool trigger = Vector3.SqrMagnitude(head.position - butt.position) <= (bellyWidth - 0.5f) * (bellyWidth - 0.5f);
+        butt.gameObject.GetComponent<PolygonCollider2D>().isTrigger = trigger;
+        // transform.GetChild(1).gameObject.SetActive(!trigger && stomachContents.Count > 0);
+        
 
         butt.gameObject.GetComponent<SpringJoint2D>().distance = bellyWidth;
+
+        
         for (int i = 0; i < stomachContents.Count; i++)
         {
+        
             if (stomachContents[i].name == "anvil")
             {
                 head.mass = 20;
@@ -221,8 +233,39 @@ public class CatController : MonoBehaviour
                     butt.GetComponent<CircleCollider2D>().sharedMaterial = bouncy;
                     butt.GetComponent<PolygonCollider2D>().sharedMaterial = bouncy;
                 }
+            } else if (stomachContents[i].name == "watermelon")
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    transform.GetChild(j).gameObject.SetActive(false);
+                }
+                rollingCat.transform.position = (head.transform.position + butt.transform.position )/ 2;
+                rollingCat.SetActive(true);
+                gameObject.SetActive(false);
             }
         }
+
+
+        bool headGrounded = Physics2D.OverlapCircle(head.position, 0.55f, groundLayer) != null;
+        bool buttGrounded = Physics2D.OverlapCircle(butt.position, 0.55f, groundLayer) != null;
+        // Debug.Log("Head grounded: " + headGrounded);
+        // Debug.Log("Butt grounded: " + buttGrounded);
+        // if butt is grounded and head isn't, rotate the head to the same angle as the butt
+        // if (buttGrounded && !headGrounded)
+        // {
+        //     head.MoveRotation(butt.rotation);
+        // } // if head is grounded and butt isn't, rotate the butt to the same angle as the head
+        // else if (headGrounded && !buttGrounded)
+        // {
+        //     butt.MoveRotation(head.rotation);
+        // } // if both are grounded, rotate both to the average angle
+        // else if (headGrounded && buttGrounded)
+        // {
+        //     float averageRotation = (head.rotation + butt.rotation) / 2;
+        //     head.MoveRotation(averageRotation);
+        //     butt.MoveRotation(averageRotation);
+        // }
+        
 
     }
 
@@ -293,10 +336,10 @@ public class CatController : MonoBehaviour
 
             for (int i = 0; i < foodPoints.Count; i++)
             {
-                Vector2 p = ((buttOrigin + headOrigin) / 2f + (startPoint - min) * butt2head) + flipFactor * butt2head.Perpendicular2() * foodPoints[i].y + butt2head * foodPoints[i].x;
 
                 if (foodPoints[i].y > minBellyWidth / 2f)
                 {
+                    Vector2 p = ((buttOrigin + headOrigin) / 2f + (startPoint - min) * butt2head) + flipFactor * butt2head.Perpendicular2() * foodPoints[i].y + butt2head * foodPoints[i].x;
                     if (spline.GetPointCount() - 2 == pointIndex)
                     {
                         spline.InsertPointAt(pointIndex, p);
@@ -309,6 +352,7 @@ public class CatController : MonoBehaviour
                 }
                 if (foodPoints[i].y > 0)
                 {
+                    Vector2 p = ((startPoint - min) * Vector2.right) + flipFactor * Vector2.up * foodPoints[i].y + Vector2.right * foodPoints[i].x;
                     collisionPoints.Add(p);
                 }
             }
@@ -339,9 +383,9 @@ public class CatController : MonoBehaviour
 
             for (int i = 0; i < foodPoints.Count; i++)
             {
-                Vector2 p = ((buttOrigin + headOrigin) / 2f + (endPoint - max) * butt2head) + flipFactor * butt2head.Perpendicular2() * foodPoints[i].y + butt2head * foodPoints[i].x;
                 if (foodPoints[i].y < -minBellyWidth / 2f)
                 {
+                    Vector2 p = ((buttOrigin + headOrigin) / 2f + (endPoint - max) * butt2head) + flipFactor * butt2head.Perpendicular2() * foodPoints[i].y + butt2head * foodPoints[i].x;
                     if (spline.GetPointCount() == pointIndex)
                     {
                         spline.InsertPointAt(pointIndex, p);
@@ -354,6 +398,7 @@ public class CatController : MonoBehaviour
                 }
                 if (foodPoints[i].y <= 0)
                 {
+                    Vector2 p = ((endPoint - max) * Vector2.right) + flipFactor * Vector2.up * foodPoints[i].y + Vector2.right * foodPoints[i].x;
                     collisionPoints.Add(p);
                 }
             }
@@ -387,15 +432,17 @@ public class CatController : MonoBehaviour
         {
             butt.gameObject.GetComponent<CircleCollider2D>().offset = new Vector2(0.08468014f, 0.089414f);
             head.gameObject.GetComponent<CircleCollider2D>().offset = new Vector2(-0.08468014f, 0.089414f);
-            butt.gameObject.GetComponent<SpriteRenderer>().flipY = true;
-            head.gameObject.GetComponent<SpriteRenderer>().flipY = true;
+            butt.transform.GetComponent<SpriteRenderer>().flipY = true;
+            head.transform.GetComponent<SpriteRenderer>().flipY = true;
         }
         else
         {
             butt.gameObject.GetComponent<CircleCollider2D>().offset = new Vector2(0.08468014f, -0.089414f);
             head.gameObject.GetComponent<CircleCollider2D>().offset = new Vector2(-0.08468014f, -0.089414f);
-            butt.gameObject.GetComponent<SpriteRenderer>().flipY = false;
-            head.gameObject.GetComponent<SpriteRenderer>().flipY = false;
+            butt.transform.GetComponent<SpriteRenderer>().flipY = false;
+            head.transform.GetComponent<SpriteRenderer>().flipY = false;
         }
+        // butt.transform.GetChild(0).rotation = butt.transform.rotation;
+        // head.transform.GetChild(0).rotation = butt.transform.rotation;
     }
 }
