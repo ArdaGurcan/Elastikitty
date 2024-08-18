@@ -15,10 +15,10 @@ EditorBuildSettings:
     path: Assets/Scenes/02-sandwich.unity
     guid: 884d710ec95a9436d98af5cd7690735d
   - enabled: 1
-    path: Assets/Scenes/03-anvil.unity
+    path: Assets/Scenes/04-anvil.unity
     guid: 9c2016640c09d45ba84bd5231997344c
   - enabled: 1
-    path: Assets/Scenes/04-ball.unity
+    path: Assets/Scenes/03-ball.unity
     guid: f226ad30986da42ac8d604c9b8219e86
   - enabled: 1
     path: Assets/Scenes/05-teddy-bear.unity

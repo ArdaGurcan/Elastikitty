@@ -4,7 +4,7 @@ public class DeathTrigger : MonoBehaviour
 {
     public GameObject deathScreen;  // Assign your death screen canvas here in the Inspector
     public GameObject controls;
-
+    bool died = false;
     AudioManager audioManager;
     private void Awake()
     {
@@ -13,8 +13,9 @@ public class DeathTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))  // Ensure the player object has the "Player" tag
+        if (!died && collision.CompareTag("Player"))  // Ensure the player object has the "Player" tag
         {
+            died = true;
             // Activate the death screen
             audioManager.PlaySFX(audioManager.death);
             deathScreen.SetActive(true);
