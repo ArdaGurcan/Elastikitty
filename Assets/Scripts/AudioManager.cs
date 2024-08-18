@@ -14,7 +14,7 @@ public class AudioManager : MonoBehaviour
 
 
     private void Awake() {
-       GameObject[] obj = GameObject.FindGameObjectsWithTag("Audio");
+       GameObject[] obj = GameObject.FindGameObjectsWithTag("Audiog");
        if (obj.Length > 1) {
         Destroy(this.gameObject);
        }
