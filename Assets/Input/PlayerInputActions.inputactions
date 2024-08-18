@@ -15,6 +15,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Eat",
+                    "type": "Button",
+                    "id": "0bd2f2fb-f3af-41a5-96a7-92c6837ebbb5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Butt Jump",
                     "type": "Button",
                     "id": "0ec1cc59-2091-4be3-a020-4927ae83e36c",
@@ -130,6 +139,17 @@
                     "action": "Head Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "33a1a8a4-e5e0-485b-957e-05b328343953",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Eat",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },

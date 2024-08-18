@@ -19,6 +19,7 @@ public class HeadController : MonoBehaviour
     {
         if (context.performed) 
         {
+            print("Eat");
             eat = true;
             Invoke("EatDelay", 1.0f);
         }
@@ -39,12 +40,22 @@ public class HeadController : MonoBehaviour
         // }
     }
 
+
+    void OnDrawGizmos()
+    {
+        if (cat.head != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(cat.head.transform.position, 1.5f);
+        }
+
+    }
     void FixedUpdate()
     {
         if (eat)
         {
-            GameObject item = Physics2D.OverlapCircle(cat.gameObject.transform.position, 1.5f, LayerMask.GetMask("edible")).gameObject;
-            if (item != null && item.CompareTag("Edible"))
+            GameObject item = Physics2D.OverlapCircle(cat.head.transform.position, 1.5f, LayerMask.GetMask("edible")).gameObject;
+            if (item != null)
             {
                 eat = false;
                 cat.stomachContents.Add(item);

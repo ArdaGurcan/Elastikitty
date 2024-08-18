@@ -12,7 +12,7 @@ using UnityEngine.U2D;
 public class CatController : MonoBehaviour
 {
 
-    Rigidbody2D head;
+    public Rigidbody2D head;
     Rigidbody2D butt;
 
     private SpriteShapeController sprite;
@@ -129,7 +129,7 @@ public class CatController : MonoBehaviour
     // The time between each FixedUpdate is constant
     void FixedUpdate()
     {
-        
+
 
         // If we have some input
         if (Mathf.Abs(buttMove) > 0.001)
@@ -191,11 +191,11 @@ public class CatController : MonoBehaviour
                 bellyWidth += Mathf.Abs(maxX - minX);
             }
         }
-        butt.gameObject.GetComponent<PolygonCollider2D>().isTrigger = Vector3.SqrMagnitude(head.position - butt.position) <= (bellyWidth-0.5f)*(bellyWidth-0.5f);
+        butt.gameObject.GetComponent<PolygonCollider2D>().isTrigger = Vector3.SqrMagnitude(head.position - butt.position) <= (bellyWidth - 0.5f) * (bellyWidth - 0.5f);
 
         butt.gameObject.GetComponent<SpringJoint2D>().distance = bellyWidth;
 
-        
+
     }
 
     // Update is called once per frame
@@ -203,6 +203,27 @@ public class CatController : MonoBehaviour
     // The time between each Update is not constant, it is Time.deltaTime
     void Update()
     {
+        for (int i = 0; i < stomachContents.Count; i++)
+        {
+            if (stomachContents[i].name == "anvil")
+            {
+                head.mass *= 10;
+                butt.mass *= 10;
+            }
+            else if (stomachContents[i].name == "balloon")
+            {
+                head.velocity = new Vector2(head.velocity.x, -1);
+                butt.velocity = new Vector2(butt.velocity.x, -1);
+            }
+            else if (stomachContents[i].name == "ball")
+            {
+                PhysicsMaterial2D bouncy = new PhysicsMaterial2D();
+                bouncy.bounciness = 1.2f;
+                bouncy.friction = head.GetComponent<CircleCollider2D>().sharedMaterial.friction;
+                head.GetComponent<CircleCollider2D>().sharedMaterial = bouncy;
+                butt.GetComponent<CircleCollider2D>().sharedMaterial = bouncy;
+            }
+        }
         if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
