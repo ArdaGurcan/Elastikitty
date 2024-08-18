@@ -26,11 +26,27 @@ public class HeadController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (eat) 
+        // if (eat) 
+        // {
+        //     GameObject item = collision.gameObject;
+        //     Debug.Log("Eat");
+        //     if (item != null && item.CompareTag("Edible")) {
+        //         cat.stomachContents.Add(item);
+        //         item.tag = "Ate";
+        //         item.SetActive(false);
+        //         audioManager.PlaySFX(audioManager.eat);
+        //     }
+        // }
+    }
+
+    void FixedUpdate()
+    {
+        if (eat)
         {
-            GameObject item = collision.gameObject;
-            Debug.Log("Eat");
-            if (item != null && item.CompareTag("Edible")) {
+            GameObject item = Physics2D.OverlapCircle(cat.gameObject.transform.position, 1.5f, LayerMask.GetMask("edible")).gameObject;
+            if (item != null && item.CompareTag("Edible"))
+            {
+                eat = false;
                 cat.stomachContents.Add(item);
                 item.tag = "Ate";
                 item.SetActive(false);
