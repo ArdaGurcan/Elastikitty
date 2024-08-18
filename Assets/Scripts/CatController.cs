@@ -43,6 +43,9 @@ public class CatController : MonoBehaviour
     private bool buttJump;
     private bool headJump;
 
+    private float buttJumpTimer=0f;
+    private float headJumpTimer=0f;
+
     List<Vector2> splinePoints = new List<Vector2>();
 
     AudioManager audioManager;
@@ -71,6 +74,7 @@ public class CatController : MonoBehaviour
         if (context.performed)
         {
             buttJump = true;
+            buttJumpTimer = 0.2f;
         }
     }
 
@@ -79,6 +83,7 @@ public class CatController : MonoBehaviour
         if (context.performed)
         {
             headJump = true;
+            headJumpTimer = 0.2f;
         }
     }
 
@@ -121,6 +126,33 @@ public class CatController : MonoBehaviour
         }
     }
 
+    void OnDrawGizmos()
+    {
+        if (head == null || butt == null)
+        {
+            return;
+        }
+        int flipFactor = butt.position.x < head.position.x ? 1 : -1;
+        if (headJump)
+        {
+            Gizmos.color = Color.red;
+        }
+        else
+        {
+            Gizmos.color = Color.green;
+        }
+        Gizmos.DrawSphere(head.transform.position + -head.transform.up * 0.5f*flipFactor, 0.1f);
+        if (buttJump)
+        {
+            Gizmos.color = Color.red;
+        }
+        else
+        {
+            Gizmos.color = Color.green;
+        }
+        Gizmos.DrawSphere(butt.transform.position + -butt.transform.up * 0.5f*flipFactor, 0.1f);
+    }
+
     // FixedUpdate is called once per physics frame
     // This is where we should do all physics related calculations
     // The time between each FixedUpdate is constant
@@ -149,20 +181,41 @@ public class CatController : MonoBehaviour
         {
             head.velocity = new Vector2(head.velocity.x, head.velocity.y);
         }
-
+        
+        int flipFactor = butt.position.x < head.position.x ? 1 : -1;
         // Jump the cat
-        if (headJump && Physics2D.OverlapCircle(head.position + Vector2.down * 0.5f, 0.05f, groundLayer) != null)
+        if (headJump)
         {
-            headJump = false;
-            headAnimator.SetTrigger("Jumping");
-            head.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            if (Physics2D.OverlapCircle(head.position + -(Vector2)head.transform.up * 0.5f * flipFactor, 0.1f, groundLayer) != null)
+            {
+                headJump = false;
+                headAnimator.SetTrigger("Jumping");
+                head.velocity = new Vector2(head.velocity.x, 0);
+                head.AddForce((Vector2)butt.transform.up * jumpForce * flipFactor, ForceMode2D.Impulse);
+            } else {
+                headJumpTimer -= Time.fixedDeltaTime;
+                if (headJumpTimer <= 0)
+                {
+                    headJump = false;
+                }
+            }
         }
 
-        if (buttJump && Physics2D.OverlapCircle(butt.position + Vector2.down * 0.5f, 0.05f, groundLayer) != null)
+        if (buttJump)
         {
-            buttJump = false;
-            buttAnimator.SetTrigger("Jumping");
-            butt.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            if (Physics2D.OverlapCircle(butt.position + -(Vector2)butt.transform.up * 0.5f * flipFactor, 0.1f, groundLayer) != null) 
+            {
+                buttJump = false;
+                buttAnimator.SetTrigger("Jumping");
+                butt.velocity = new Vector2(butt.velocity.x, 0);
+                butt.AddForce((Vector2)butt.transform.up * jumpForce * flipFactor, ForceMode2D.Impulse);
+            } else {
+                buttJumpTimer -= Time.fixedDeltaTime;
+                if (buttJumpTimer <= 0)
+                {
+                    buttJump = false;
+                }
+            }
         }
 
         headAnimator.SetFloat("Speed", Mathf.Abs(headMove));
