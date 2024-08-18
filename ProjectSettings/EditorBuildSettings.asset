@@ -6,6 +6,33 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 70745bdde3d1c4775bf0d8c41cefe195
+  - enabled: 1
+    path: Assets/Scenes/01-tutorial.unity
+    guid: 515eeee0f7dbd4e41973b804a247d85a
+  - enabled: 1
+    path: Assets/Scenes/02-sandwich.unity
+    guid: 884d710ec95a9436d98af5cd7690735d
+  - enabled: 1
+    path: Assets/Scenes/03-anvil.unity
+    guid: 9c2016640c09d45ba84bd5231997344c
+  - enabled: 1
+    path: Assets/Scenes/04-ball.unity
+    guid: f226ad30986da42ac8d604c9b8219e86
+  - enabled: 1
+    path: Assets/Scenes/05-teddy-bear.unity
+    guid: c076158917d054819bd0c7a0fac3802e
+  - enabled: 1
+    path: Assets/Scenes/06-watermelon-circle.unity
+    guid: c220f8c2ccecf48e79961ce289db1932
+  - enabled: 1
+    path: Assets/Scenes/07-watermelon-square.unity
+    guid: 092a1a88845a348fcb15ea230c99ec4f
+  - enabled: 1
+    path: Assets/Scenes/08-balloon.unity
+    guid: 4516e7c603d1841c8b034a9fc8d3fde4
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}
