@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor.SearchService;
 using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.U2D;
 
 public class CatController : MonoBehaviour
@@ -201,6 +203,10 @@ public class CatController : MonoBehaviour
     // The time between each Update is not constant, it is Time.deltaTime
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
         // Get the direction of the cat
         Vector2 butt2head = (head.position - butt.position).normalized;
 
