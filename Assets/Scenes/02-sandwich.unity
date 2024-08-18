@@ -1897,7 +1897,7 @@ GameObject:
   - component: {fileID: 1568292405}
   - component: {fileID: 1568292408}
   m_Layer: 9
-  m_Name: Square (1)
+  m_Name: DeathSquare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
