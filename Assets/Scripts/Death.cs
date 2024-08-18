@@ -18,6 +18,7 @@ public class DeathTrigger : MonoBehaviour
             // Activate the death screen
             audioManager.PlaySFX(audioManager.death);
             deathScreen.SetActive(true);
+            if (controls != null)
             controls.SetActive(false);
             // Optionally, you can stop the game here
             // Time.timeScale = 0;  // Freezes the game
