@@ -457,7 +457,7 @@ GameObject:
   - component: {fileID: 374407487}
   m_Layer: 6
   m_Name: Head
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1890,7 +1890,7 @@ GameObject:
   - component: {fileID: 1555163222}
   m_Layer: 8
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2145,6 +2145,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 3a26f80b-42e6-4d6d-a8fb-425e7cbd0dd1
     m_ActionName: Cat/Head Jump[/Keyboard/upArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5cfbb63a-0e02-4014-be34-cf796e8a9100
+    m_ActionName: Head/Eat[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Cat
@@ -2204,7 +2208,7 @@ GameObject:
   - component: {fileID: 1967080635}
   m_Layer: 7
   m_Name: Butt
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
