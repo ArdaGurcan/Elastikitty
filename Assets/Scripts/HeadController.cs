@@ -9,11 +9,18 @@ public class HeadController : MonoBehaviour
     private bool eat;
     public CatController cat;
 
+    AudioManager audioManager;
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     public void OnEat(InputAction.CallbackContext context) 
     {
         if (context.performed) 
         {
             eat = true;
+            Invoke("EatDelay", 1.0f);
         }
     }
 
@@ -27,7 +34,13 @@ public class HeadController : MonoBehaviour
                 cat.stomachContents.Add(item);
                 item.tag = "Ate";
                 item.SetActive(false);
+                audioManager.PlaySFX(audioManager.eat);
             }
         }
+    }
+
+    void EatDelay()
+    {
+        eat = false;
     }
 }

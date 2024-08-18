@@ -42,6 +42,12 @@ public class CatController : MonoBehaviour
 
     List<Vector2> splinePoints = new List<Vector2>();
 
+    AudioManager audioManager;
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     // These functions are called by unity's new input action system when the user presses the buttons
     public void OnButtMove(InputAction.CallbackContext context)
     {
