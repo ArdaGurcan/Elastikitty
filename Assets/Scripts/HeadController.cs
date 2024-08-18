@@ -54,13 +54,15 @@ public class HeadController : MonoBehaviour
     {
         if (eat)
         {
-            GameObject item = Physics2D.OverlapCircle(cat.head.transform.position, 1.5f, LayerMask.GetMask("edible")).gameObject;
+            Collider2D item = Physics2D.OverlapCircle(cat.head.transform.position, 1.5f, LayerMask.GetMask("edible"));
             if (item != null)
             {
+                print(item);
+                GameObject food = item.gameObject;
                 eat = false;
-                cat.stomachContents.Add(item);
-                item.tag = "Ate";
-                item.SetActive(false);
+                cat.stomachContents.Add(food);
+                food.tag = "Ate";
+                food.SetActive(false);
                 audioManager.PlaySFX(audioManager.eat);
             }
         }
