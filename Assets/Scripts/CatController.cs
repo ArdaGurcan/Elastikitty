@@ -30,7 +30,7 @@ public class CatController : MonoBehaviour
     LayerMask groundLayer;
 
     [SerializeField]
-    List<GameObject> stomachContents;
+    public List<GameObject> stomachContents;
     List<PolygonCollider2D> stomachColliders;
 
     private float buttMove;
@@ -72,6 +72,8 @@ public class CatController : MonoBehaviour
             headJump = true;
         }
     }
+
+
 
     // Start is called before the first frame update
     void Start()

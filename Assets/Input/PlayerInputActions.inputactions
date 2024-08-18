@@ -40,15 +40,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Eat",
-                    "type": "Button",
-                    "id": "23c62150-4c1a-463f-af4b-2b0f806f81ae",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -139,10 +130,27 @@
                     "action": "Head Move",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
+                }
+            ]
+        },
+        {
+            "name": "Head",
+            "id": "aefedab0-37fa-4e1c-a59e-3c0fb37d65b3",
+            "actions": [
+                {
+                    "name": "Eat",
+                    "type": "Button",
+                    "id": "5cfbb63a-0e02-4014-be34-cf796e8a9100",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
                 {
                     "name": "",
-                    "id": "fe311816-fd29-42ce-8f41-718af801c0c1",
+                    "id": "47e79b2e-4ee8-4ca7-a297-496a9aa23b89",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
