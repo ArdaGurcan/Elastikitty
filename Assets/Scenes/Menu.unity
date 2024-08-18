@@ -282,7 +282,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicSource: {fileID: 2052904603}
   SFXSource: {fileID: 976686664}
-  background: {fileID: 8300000, guid: 713f51012227248868acf781aebb5cc9, type: 3}
+  background: {fileID: 8300000, guid: bb7e95398f28f4a2ea8efcae3a92a8ef, type: 3}
   eat: {fileID: 8300000, guid: c6799fc9a2bd44573a59b5e3adeee070, type: 3}
   death: {fileID: 8300000, guid: 21bae8d8ac7724ca197bf7b15d53f908, type: 3}
   goal: {fileID: 8300000, guid: 742ff4a6319f14a629044ab94ec05c82, type: 3}
@@ -860,7 +860,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.131
+  m_Volume: 0.16
   m_Pitch: 1
   Loop: 1
   Mute: 0
