@@ -235,8 +235,7 @@ public class CatController : MonoBehaviour
         else // if there is food in stomach, belly width is the sum of the food widths + some padding + butt and head width ( from their centers )
         {
             bellyWidth = 1.05f;
-            if (SceneManager.GetActiveScene().name == "03-ball")
-            bellyWidth = 0.55f;
+            
             foreach (GameObject food in stomachContents)
             {
                 List<Vector2> points = food.GetComponent<PolygonCollider2D>().points.ToList();
@@ -253,7 +252,7 @@ public class CatController : MonoBehaviour
             // transform.GetChild(1).GetComponents<SpringJoint2D>()[1].distance = Vector3.Magnitude(middle - rightmost) + 1.05f/2f + 0.05f;;
         }
         bool trigger = Vector3.SqrMagnitude(head.position - butt.position) <= (bellyWidth - 0.5f) * (bellyWidth - 0.5f);
-        head.gameObject.GetComponent<PolygonCollider2D>().isTrigger = trigger;
+        butt.gameObject.GetComponent<PolygonCollider2D>().isTrigger = trigger;
         // transform.GetChild(1).gameObject.SetActive(!trigger && stomachContents.Count > 0);
         
 
@@ -286,7 +285,7 @@ public class CatController : MonoBehaviour
                     bouncy.friction = head.GetComponent<CircleCollider2D>().sharedMaterial.friction;
                     head.GetComponent<CircleCollider2D>().sharedMaterial = bouncy;
                     butt.GetComponent<CircleCollider2D>().sharedMaterial = bouncy;
-                    head.GetComponent<PolygonCollider2D>().sharedMaterial = bouncy;
+                    butt.GetComponent<PolygonCollider2D>().sharedMaterial = bouncy;
                 }
 
             } else if (stomachContents[i].name == "watermelon")
@@ -463,7 +462,7 @@ public class CatController : MonoBehaviour
 
         if (collisionPoints.Count > 0)
         {
-            PolygonCollider2D collider = head.gameObject.GetComponent<PolygonCollider2D>();
+            PolygonCollider2D collider = butt.gameObject.GetComponent<PolygonCollider2D>();
             List<Vector2> points = new List<Vector2>();
             for (int i = 0; i < collisionPoints.Count; i++)
             {
@@ -475,7 +474,7 @@ public class CatController : MonoBehaviour
                 points[i] = new Vector2(points[i].x - average.x, points[i].y - average.y);
             }
             collider.points = points.ToArray();
-            collider.offset = Vector2.left * (head.position - butt.position).magnitude / 2f;
+            collider.offset = Vector2.right * (head.position - butt.position).magnitude / 2f;
         }
 
 
