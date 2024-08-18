@@ -12,6 +12,17 @@ public class AudioManager : MonoBehaviour
    public AudioClip death;
    public AudioClip goal;
 
+
+    private void Awake() {
+       GameObject[] obj = GameObject.FindGameObjectsWithTag("Audio");
+       if (obj.Length > 1) {
+        Destroy(this.gameObject);
+       }
+       else {
+        DontDestroyOnLoad(this.gameObject);
+       }
+    }
+
    private void Start() 
    {
     musicSource.clip = background;
