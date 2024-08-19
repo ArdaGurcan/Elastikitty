@@ -235,6 +235,12 @@ public class CatController : MonoBehaviour
         else // if there is food in stomach, belly width is the sum of the food widths + some padding + butt and head width ( from their centers )
         {
             bellyWidth = 1.05f;
+
+            String name = SceneManager.GetActiveScene().name;
+            if (name.Contains("anvil") || (name.Contains("ball") && !name.Contains("balloon")))
+            {
+                bellyWidth = 0.55f;
+            }
             
             foreach (GameObject food in stomachContents)
             {
