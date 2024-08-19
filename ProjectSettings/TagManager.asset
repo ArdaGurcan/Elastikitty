@@ -8,6 +8,8 @@ TagManager:
   - Ate
   - Audio
   - Music
+  - Door
+  - Trigger
   layers:
   - Default
   - TransparentFX
