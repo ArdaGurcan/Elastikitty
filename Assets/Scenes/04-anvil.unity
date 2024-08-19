@@ -756,7 +756,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.0001
+  m_Mass: 0.65
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -1623,8 +1623,8 @@ PolygonCollider2D:
       - {x: 6.521723, y: 0.54216945}
       - {x: 6.5570464, y: 4.9097805}
       - {x: 9.819377, y: 4.9461255}
-      - {x: 9.831116, y: 9.593006}
-      - {x: 5.7665787, y: 9.560341}
+      - {x: 9.831115, y: 9.593006}
+      - {x: 6.489537, y: 9.560377}
       - {x: 7.023985, y: 15.6341505}
       - {x: -2.8184896, y: 15.652543}
       - {x: 2.1315546, y: 9.445423}
@@ -1790,7 +1790,7 @@ MonoBehaviour:
       spriteIndex: 0
       corner: 1
       m_CornerMode: 1
-    - position: {x: 5.766275, y: 9.560404, z: 0}
+    - position: {x: 6.489228, y: 9.560404, z: 0}
       leftTangent: {x: 0, y: 0, z: 0}
       rightTangent: {x: 0, y: 0, z: 0}
       mode: 0
@@ -1920,8 +1920,8 @@ MonoBehaviour:
   - {x: 6.521723, y: 0.54216945}
   - {x: 6.5570464, y: 4.9097805}
   - {x: 9.819377, y: 4.9461255}
-  - {x: 9.831116, y: 9.593006}
-  - {x: 5.7665787, y: 9.560341}
+  - {x: 9.831115, y: 9.593006}
+  - {x: 6.489537, y: 9.560377}
   - {x: 7.023985, y: 15.6341505}
   - {x: -2.8184896, y: 15.652543}
   - {x: 2.1315546, y: 9.445423}
@@ -3531,7 +3531,7 @@ Transform:
   m_GameObject: {fileID: 1930674761}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.610001, y: 3.42, z: 0.012393649}
+  m_LocalPosition: {x: 9.610001, y: 4.02, z: 0.012393649}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
