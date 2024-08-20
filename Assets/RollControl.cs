@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class RollControl : MonoBehaviour
 {
@@ -43,16 +44,20 @@ public class RollControl : MonoBehaviour
     }
 
     void Update() {
-        // If the button is pressed
-        if (buttJump || headJump)
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            // Print the message
-            print("Butt Jump");
-            GetComponent<Rigidbody2D>().AddForce(Vector2.up * 5, ForceMode2D.Impulse);
-            // Reset the button press
-            buttJump = false;
-            headJump = false;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+        // // If the button is pressed
+        // if (buttJump || headJump)
+        // {
+        //     // Print the message
+        //     print("Butt Jump");
+        //     GetComponent<Rigidbody2D>().AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+        //     // Reset the button press
+        //     buttJump = false;
+        //     headJump = false;
+        // }
 
         // If the button is pressed
         if (Mathf.Abs(buttMove) > 0.01)
