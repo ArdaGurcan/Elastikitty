@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/08-balloon.unity
     guid: 4516e7c603d1841c8b034a9fc8d3fde4
+  - enabled: 1
+    path: Assets/Scenes/End.unity
+    guid: a9315890fc77243e1bb34d324a7ded59
   - enabled: 0
     path: Assets/Scenes/07-watermelon-square.unity
     guid: 092a1a88845a348fcb15ea230c99ec4f

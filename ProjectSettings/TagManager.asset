@@ -10,6 +10,7 @@ TagManager:
   - Music
   - Door
   - Trigger
+  - Check
   layers:
   - Default
   - TransparentFX
